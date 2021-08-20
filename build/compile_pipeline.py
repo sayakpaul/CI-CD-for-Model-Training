@@ -1,8 +1,9 @@
 import os
-import tfx
 import logging
 import argparse
 import create_pipeline
+
+from tfx import v1 as tfx
 
 
 def get_args():
