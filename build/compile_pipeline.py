@@ -33,6 +33,12 @@ def get_args():
         "--serving-model-dir",
         type=str,
     )
+    
+    parser.add_argument(
+        "tfx-image-uri",
+        type=str,
+        default="gcr.io/tfx-oss-public/tfx:1.0.0"
+    )
 
     return parser.parse_args()
 
@@ -41,7 +47,9 @@ def compile_pipeline(args):
     pipeline_definition_file = args.pipeline_name + ".json"
 
     runner = tfx.orchestration.experimental.KubeflowV2DagRunner(
-        config=tfx.orchestration.experimental.KubeflowV2DagRunnerConfig(),
+        config=tfx.orchestration.experimental.KubeflowV2DagRunnerConfig(
+                default_image=args.tfx_image_uri
+            ),
         output_filename=pipeline_definition_file,
     )
 
