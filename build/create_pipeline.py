@@ -1,4 +1,4 @@
-import tfx
+from tfx import v1 as tfx
 
 
 def create_pipeline(
