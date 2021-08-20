@@ -35,7 +35,7 @@ def get_args():
     )
     
     parser.add_argument(
-        "tfx-image-uri",
+        "--tfx-image-uri",
         type=str,
         required=False,
         default="gcr.io/tfx-oss-public/tfx:1.0.0"
