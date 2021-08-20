@@ -72,6 +72,7 @@ def compile_pipeline(args):
 
 def main():
     args = get_args()
+    logging.info(f"TFX Version: {tfx.__version__}")
     result = compile_pipeline(args)
     logging.info(result)
 
