@@ -2,7 +2,7 @@ import os
 import tfx
 import logging
 import argparse
-from . import create_pipeline
+import create_pipeline
 
 
 def get_args():
