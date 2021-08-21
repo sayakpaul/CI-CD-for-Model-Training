@@ -1,7 +1,7 @@
 import os
 import logging
 import argparse
-import create_pipeline
+from create_pipeline import create_pipeline
 
 from tfx import v1 as tfx
 from tfx.orchestration.kubeflow.v2 import kubeflow_v2_dag_runner
