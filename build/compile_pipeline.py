@@ -4,6 +4,7 @@ import argparse
 import create_pipeline
 
 from tfx import v1 as tfx
+from tfx.orchestration.kubeflow.v2 import kubeflow_v2_dag_runner
 
 
 def get_args():
@@ -38,7 +39,7 @@ def get_args():
         "--tfx-image-uri",
         type=str,
         required=False,
-        default="gcr.io/tfx-oss-public/tfx:0.30.0"
+        default="gcr.io/tfx-oss-public/tfx:1.0.0"
     )
 
     return parser.parse_args()
@@ -47,8 +48,8 @@ def get_args():
 def compile_pipeline(args):
     pipeline_definition_file = args.pipeline_name + ".json"
 
-    runner = tfx.orchestration.experimental.KubeflowV2DagRunner(
-        config=tfx.orchestration.experimental.KubeflowV2DagRunnerConfig(
+    runner = kubeflow_v2_dag_runner.KubeflowV2DagRunner(
+        config=kubeflow_v2_dag_runner.KubeflowV2DagRunnerConfig(
                 default_image=args.tfx_image_uri
             ),
         output_filename=pipeline_definition_file,
