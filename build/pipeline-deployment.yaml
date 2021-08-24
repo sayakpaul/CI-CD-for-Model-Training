@@ -34,16 +34,17 @@ steps:
 - name: '$_CICD_IMAGE_URI'
   entrypoint: 'python'
   args: ['build/compile_pipeline.py',
-          '--pipeline-name', '$_PIPELINE_NAME',
-          '--pipeline-root', '$_PIPELINE_ROOT',
-          '--data-root', '$_DATA_ROOT',
-          '--module-root', '$_MODULE_ROOT',
-          '--serving-model-dir', '$_SERVING_MODEL_DIR'
+          '--use-gpu', False
         ]
   dir: 'CI-CD-for-Model-Training'
   env: 
   - 'PROJECT=$_PROJECT'  
   - 'REGION=$_REGION'
+  - 'PIPELINE_NAME=$_PIPELINE_NAME'
+  - 'PIPELINE_ROOT=$_PIPELINE_ROOT'
+  - 'DATA_ROOT=$_DATA_ROOT'
+  - 'MODULE_ROOT=$_MODULE_ROOT'
+  - 'SERVING_MODEL_DIR=$_SERVING_MODEL_DIR'
   id: 'Compile Pipeline'
   waitFor: ['Clone Repository']
   
