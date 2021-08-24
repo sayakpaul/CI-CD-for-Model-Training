@@ -1,10 +1,19 @@
 import argparse
+
 from absl import logging
-from tensorflow import keras
 from create_pipeline import create_pipeline
 
 from tfx.orchestration import data_types
 from tfx.orchestration.kubeflow.v2 import kubeflow_v2_dag_runner
+
+import os
+import sys
+SCRIPT_DIR = os.path.dirname(
+    os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__)))
+)
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, "..")))
+
+from utils import config
 
 
 def get_args():
@@ -28,7 +37,7 @@ def get_args():
 
 
 def compile_pipeline(args):
-    pipeline_definition_file = args.pipeline_name + ".json"
+    pipeline_definition_file = config.PIPELINE_NAME + ".json"
 
     runner = kubeflow_v2_dag_runner.KubeflowV2DagRunner(
         config=kubeflow_v2_dag_runner.KubeflowV2DagRunnerConfig(
