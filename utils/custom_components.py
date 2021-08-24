@@ -22,7 +22,7 @@ def hyperparameters_gen(
     num_epochs: Parameter[int],
     batch_size: Parameter[int],
     learning_rate: Parameter[float],
-    hyperparameters: OutputArtifact[HyperParameters],
+    hyperparameters: OutputArtifact[HyperParameters]
 ):
 
     hp_dict = dict()
