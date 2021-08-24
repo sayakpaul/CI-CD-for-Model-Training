@@ -51,7 +51,7 @@ steps:
   
 # Upload compiled pipeline to GCS.
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', '$_PIPELINE_NAME.json', '$_PIPELINE_ROOT']
+  args: ['cp', '$_PIPELINE_NAME.json', '$_PIPELINE_ROOT/']
   dir: 'CI-CD-for-Model-Training'
   id:  'Upload Pipeline to GCS'
   waitFor: ['Compile Pipeline']

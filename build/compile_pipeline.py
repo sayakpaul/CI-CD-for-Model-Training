@@ -38,7 +38,7 @@ def get_args():
 
 def compile_pipeline(args):
     pipeline_definition_file = config.PIPELINE_NAME + ".json"
-    logging.info(f"Pipeline definition file location: {pipeline_definition_file}")
+    print(f"Pipeline definition file location: {pipeline_definition_file}")
 
     runner = kubeflow_v2_dag_runner.KubeflowV2DagRunner(
         config=kubeflow_v2_dag_runner.KubeflowV2DagRunnerConfig(
