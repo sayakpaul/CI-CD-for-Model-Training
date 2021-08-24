@@ -38,7 +38,6 @@ def get_args():
 
 def compile_pipeline(args):
     pipeline_definition_file = config.PIPELINE_NAME + ".json"
-    print(f"Pipeline definition file location: {pipeline_definition_file}")
 
     runner = kubeflow_v2_dag_runner.KubeflowV2DagRunner(
         config=kubeflow_v2_dag_runner.KubeflowV2DagRunnerConfig(
@@ -55,7 +54,7 @@ def compile_pipeline(args):
     return runner.run(
         create_pipeline(
             num_epochs=data_types.RuntimeParameter(name="num_epochs", ptype=int),
-            batch_size=data_types.RuntimeParameter(name="batch_sizer", ptype=int),
+            batch_size=data_types.RuntimeParameter(name="batch_size", ptype=int),
             learning_rate=data_types.RuntimeParameter(name="learning_rate", ptype=float),
             use_gpu=use_gpu,
         ),
