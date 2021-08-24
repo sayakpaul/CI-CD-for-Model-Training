@@ -8,7 +8,7 @@ SCRIPT_DIR = os.path.dirname(
 )
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, "..")))
 
-from utils import config, custom_components
+from utils import config, custom_components, optimizer_mapping
 
 def create_pipeline(
     num_epochs: data_types.RuntimeParameter,
@@ -21,6 +21,7 @@ def create_pipeline(
     example_gen = tfx.components.CsvExampleGen(input_base=config.DATA_ROOT)
 
     # Generate hyperparameters.
+    optimizer = optimizer_mapping.OPTIMIZER_DICT[optimizer]
     hyperparams_gen = custom_components.hyperparameters_gen(
         num_epochs=num_epochs,
         batch_size=batch_size,

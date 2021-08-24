@@ -46,7 +46,7 @@ def compile_pipeline(args):
         create_pipeline(
             num_epochs=data_types.RuntimeParameter(name="num_epochs", ptype=int),
             batch_size=data_types.RuntimeParameter(name="batch_sizer", ptype=int),
-            optimizer=data_types.RuntimeParameter(name="optimizer", ptype=keras.optimizers.Optimizer),
+            optimizer=data_types.RuntimeParameter(name="optimizer", ptype=str),
             use_gpu=use_gpu,
         ),
         write_out=True,

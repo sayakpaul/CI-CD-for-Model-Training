@@ -10,7 +10,6 @@ from tfx.dsl.component.experimental.annotations import (
     Parameter,
 )
 from tfx.types.standard_artifacts import HyperParameters
-import tensorflow as tf
 import logging
 
 
@@ -18,7 +17,7 @@ import logging
 def hyperparameters_gen(
     num_epochs: Parameter[int],
     batch_size: Parameter[int],
-    optimizer: Parameter[tf.keras.optimizers.Optimizer],
+    optimizer: Parameter[str],
     hyperparameters: OutputArtifact[HyperParameters],
 ):
 
