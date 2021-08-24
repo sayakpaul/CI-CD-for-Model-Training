@@ -21,7 +21,7 @@ def get_args():
 
     parser.add_argument(
         "--use-gpu",
-        type=bool,
+        type=str,
         required=False,
         default=False
     )
@@ -39,7 +39,7 @@ def compile_pipeline(args):
         output_filename=pipeline_definition_file,
     )
 
-    use_gpu = bool(args.use_gpu)
+    use_gpu = True if args.use_gpu == "True" else False
 
     return runner.run(
         create_pipeline(
