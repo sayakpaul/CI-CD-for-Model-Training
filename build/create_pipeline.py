@@ -26,7 +26,7 @@ def create_pipeline(
         batch_size=batch_size,
         learning_rate=learning_rate
     ).with_id("HyperparamsGen")
-    print(hyperparams_gen.outputs.hyperparameters)
+
     # NEW: Configuration for Vertex AI Training.
     # This dictionary will be passed as `CustomJobSpec`.
     vertex_job_spec = {
@@ -57,7 +57,7 @@ def create_pipeline(
         examples=example_gen.outputs["examples"],
         train_args=tfx.proto.TrainArgs(num_steps=0),
         eval_args=tfx.proto.EvalArgs(num_steps=None),
-        hyperparameters=hyperparams_gen.outputs.hyperparameters,
+        hyperparameters=hyperparams_gen.outputs["hyperparameters"],
         custom_config={
             tfx.extensions.google_cloud_ai_platform.ENABLE_UCAIP_KEY: True,
             tfx.extensions.google_cloud_ai_platform.UCAIP_REGION_KEY: config.GCP_REGION,
