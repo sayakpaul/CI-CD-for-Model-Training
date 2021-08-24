@@ -8,7 +8,7 @@ SCRIPT_DIR = os.path.dirname(
 )
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, "..")))
 
-from utils import config, custom_components, optimizer_mapping
+from utils import config, custom_components
 
 def create_pipeline(
     num_epochs: data_types.RuntimeParameter,
