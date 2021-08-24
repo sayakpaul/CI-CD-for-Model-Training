@@ -1,7 +1,14 @@
 from tfx.orchestration import data_types
-from utils import config, custom_components
 from tfx import v1 as tfx
 
+import os
+import sys
+SCRIPT_DIR = os.path.dirname(
+    os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__)))
+)
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, "..")))
+
+from utils import config, custom_components
 
 def create_pipeline(
     num_epochs: data_types.RuntimeParameter,
