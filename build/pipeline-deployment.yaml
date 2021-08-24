@@ -31,8 +31,8 @@ steps:
 
 # Build the image that encapsulates the pipeline.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', '$_TFX_IMAGE_URI', '.']
-  dir: 'CI-CD-for-Model-Training/build'
+  args: ['build', '-t', '$_TFX_IMAGE_URI', 'build/.']
+  dir: 'CI-CD-for-Model-Training'
   id: 'Build TFX Image'
   waitFor: ['Clone Repository']
   
