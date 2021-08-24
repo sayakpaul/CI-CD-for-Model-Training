@@ -1,5 +1,5 @@
 """
-References:
+Taken from:
     * https://github.com/GoogleCloudPlatform/mlops-with-vertex-ai/blob/main/src/tfx_pipelines/components.py#L51
 """
 
@@ -10,7 +10,11 @@ from tfx.dsl.component.experimental.annotations import (
     Parameter,
 )
 from tfx.types.standard_artifacts import HyperParameters
+from tfx.types import artifact_utils
+from tfx.utils import io_utils
 import logging
+import json
+import os
 
 
 @component
@@ -26,3 +30,10 @@ def hyperparameters_gen(
     hp_dict["batch_size"] = batch_size
     hp_dict["learning_rate"] = learning_rate
     logging.info(f"Hyperparameters: {hp_dict}")
+
+    hyperparams_uri = os.path.join(
+        artifact_utils.get_single_uri([hyperparameters]),
+        "hyperparameters.json"
+    )
+    io_utils.write_string_file(hyperparams_uri, json.dumps(hp_dict))
+    logging.info(f"Hyperparameters are written to: {hyperparams_uri}")

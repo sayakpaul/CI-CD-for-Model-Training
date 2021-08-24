@@ -109,26 +109,29 @@ def run_fn(fn_args: tfx.components.FnArgs):
     # `schema_from_feature_spec` could be used to generate schema from very simple
     # feature_spec, but the schema returned would be very primitive.
     schema = schema_utils.schema_from_feature_spec(_FEATURE_SPEC)
+    hyperparameters = fn_args.hyperparameters
+    logging.info("Hyperparameters:")
+    logging.info(hyperparameters)
 
     train_dataset = _input_fn(
-        fn_args.train_files, fn_args.data_accessor, schema, batch_size=fn_args.batch_size
+        fn_args.train_files, fn_args.data_accessor, schema, batch_size=hyperparameters["batch_size"]
     )
     eval_dataset = _input_fn(
-        fn_args.eval_files, fn_args.data_accessor, schema, batch_size=fn_args.batch_size
+        fn_args.eval_files, fn_args.data_accessor, schema, batch_size=hyperparameters["batch_size"]
     )
 
     # NEW: If we have a distribution strategy, build a model in a strategy scope.
     strategy = _get_distribution_strategy(fn_args)
     if strategy is None:
-        model = _make_keras_model(fn_args.learning_rate)
+        model = _make_keras_model(hyperparameters["learning_rate"])
     else:
         with strategy.scope():
-            model = _make_keras_model(fn_args.learning_rate)
+            model = _make_keras_model(hyperparameters["learning_rate"])
 
     model.fit(
         train_dataset,
         validation_data=eval_dataset,
-        epochs=fn_args.num_epochs,
+        epochs=hyperparameters["num_epochs"],
     )
 
     # The result of the training should be saved in `fn_args.serving_model_dir`
