@@ -26,13 +26,6 @@ def get_args():
         default=False
     )
 
-    parser.add_argument(
-        "--tfx-image-uri",
-        type=str,
-        required=False,
-        default="gcr.io/tfx-oss-public/tfx:1.0.0"
-    )
-
     return parser.parse_args()
 
 
@@ -41,7 +34,7 @@ def compile_pipeline(args):
 
     runner = kubeflow_v2_dag_runner.KubeflowV2DagRunner(
         config=kubeflow_v2_dag_runner.KubeflowV2DagRunnerConfig(
-                default_image=args.tfx_image_uri
+                default_image=config.TFX_IMAGE_URI
             ),
         output_filename=pipeline_definition_file,
     )

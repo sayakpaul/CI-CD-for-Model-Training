@@ -22,7 +22,7 @@ def hyperparameters_gen(
     num_epochs: Parameter[int],
     batch_size: Parameter[int],
     learning_rate: Parameter[float],
-    hyperparameters: OutputArtifact[HyperParameters]
+    hyperparameters: OutputArtifact[HyperParameters],
 ):
 
     hp_dict = dict()
@@ -32,8 +32,7 @@ def hyperparameters_gen(
     logging.info(f"Hyperparameters: {hp_dict}")
 
     hyperparams_uri = os.path.join(
-        artifact_utils.get_single_uri([hyperparameters]),
-        "hyperparameters.json"
+        artifact_utils.get_single_uri([hyperparameters]), "hyperparameters.json"
     )
     io_utils.write_string_file(hyperparams_uri, json.dumps(hp_dict))
     logging.info(f"Hyperparameters are written to: {hyperparams_uri}")
