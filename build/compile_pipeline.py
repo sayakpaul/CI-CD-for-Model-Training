@@ -23,7 +23,7 @@ def get_args():
         "--use-gpu",
         type=str,
         required=False,
-        default=False
+        default="False"
     )
 
     return parser.parse_args()
