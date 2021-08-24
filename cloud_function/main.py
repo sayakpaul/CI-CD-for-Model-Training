@@ -24,8 +24,8 @@ from google.cloud import storage
 
 def trigger_pipeline(event, context):
 
-    project = os.getenv("GCP_PROJECT")
-    region = os.getenv("GCP_REGION")
+    project = os.getenv("PROJECT")
+    region = os.getenv("REGION")
     gcs_pipeline_file_location = os.getenv("GCS_PIPELINE_FILE_LOCATION")
 
     if not project:
