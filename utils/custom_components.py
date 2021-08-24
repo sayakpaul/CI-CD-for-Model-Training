@@ -17,12 +17,12 @@ import logging
 def hyperparameters_gen(
     num_epochs: Parameter[int],
     batch_size: Parameter[int],
-    optimizer: Parameter[str],
+    learning_rate: Parameter[float],
     hyperparameters: OutputArtifact[HyperParameters],
 ):
 
     hp_dict = dict()
     hp_dict["num_epochs"] = num_epochs
     hp_dict["batch_size"] = batch_size
-    hp_dict["optimizer"] = optimizer
+    hp_dict["learning_rate"] = learning_rate
     logging.info(f"Hyperparameters: {hp_dict}")

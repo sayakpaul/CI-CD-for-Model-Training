@@ -13,7 +13,7 @@ from utils import config, custom_components, optimizer_mapping
 def create_pipeline(
     num_epochs: data_types.RuntimeParameter,
     batch_size: data_types.RuntimeParameter,
-    optimizer: data_types.RuntimeParameter,
+    learning_rate: data_types.RuntimeParameter,
     use_gpu: bool,
 ) -> tfx.dsl.Pipeline:
     """Implements the penguin pipeline with TFX."""
@@ -21,11 +21,10 @@ def create_pipeline(
     example_gen = tfx.components.CsvExampleGen(input_base=config.DATA_ROOT)
 
     # Generate hyperparameters.
-    optimizer = optimizer_mapping.OPTIMIZER_DICT[optimizer]
     hyperparams_gen = custom_components.hyperparameters_gen(
         num_epochs=num_epochs,
         batch_size=batch_size,
-        optimizer=optimizer
+        learning_rate=learning_rate
     )
 
     # NEW: Configuration for Vertex AI Training.

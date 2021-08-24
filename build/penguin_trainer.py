@@ -60,7 +60,7 @@ def _input_fn(
     ).repeat()
 
 
-def _make_keras_model(optimizer: keras.optimizers.Optimizer) -> tf.keras.Model:
+def _make_keras_model(learning_rate: float) -> tf.keras.Model:
     """Creates a DNN Keras model for classifying penguin data.
 
     Returns:
@@ -75,6 +75,7 @@ def _make_keras_model(optimizer: keras.optimizers.Optimizer) -> tf.keras.Model:
     outputs = keras.layers.Dense(3)(d)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
+    optimizer = keras.optimizers.Adam(learning_rate)
     model.compile(
         optimizer=optimizer,
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -119,10 +120,10 @@ def run_fn(fn_args: tfx.components.FnArgs):
     # NEW: If we have a distribution strategy, build a model in a strategy scope.
     strategy = _get_distribution_strategy(fn_args)
     if strategy is None:
-        model = _make_keras_model(fn_args.optimizer)
+        model = _make_keras_model(fn_args.learning_rate)
     else:
         with strategy.scope():
-            model = _make_keras_model(fn_args.optimizer)
+            model = _make_keras_model(fn_args.learning_rate)
 
     model.fit(
         train_dataset,
