@@ -37,12 +37,17 @@ def compile_pipeline(args):
         output_filename=pipeline_definition_file,
     )
 
+    if isinstance(args["use_gpu"], str):
+        use_gpu = bool(args["use_gpu"])
+    else:
+        use_gpu = args["use_gpu"]
+
     return runner.run(
         create_pipeline(
             num_epochs=data_types.RuntimeParameter(name="num_epochs", ptype=int),
             batch_size=data_types.RuntimeParameter(name="batch_sizer", ptype=int),
             optimizer=data_types.RuntimeParameter(name="optimizer", ptype=keras.optimizers.Optimizer),
-            use_gpu=args["use_gpu"],
+            use_gpu=use_gpu,
         ),
         write_out=True,
     )

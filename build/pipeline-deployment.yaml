@@ -34,7 +34,7 @@ steps:
 - name: '$_CICD_IMAGE_URI'
   entrypoint: 'python'
   args: ['build/compile_pipeline.py',
-          '--use-gpu', False
+          '--use-gpu', "False"
         ]
   dir: 'CI-CD-for-Model-Training'
   env: 
