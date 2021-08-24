@@ -57,7 +57,7 @@ def _input_fn(
         file_pattern,
         tfxio.TensorFlowDatasetOptions(batch_size=batch_size, label_key=_LABEL_KEY),
         schema=schema,
-    ).repeat()
+    )
 
 
 def _make_keras_model(learning_rate: float) -> tf.keras.Model:
