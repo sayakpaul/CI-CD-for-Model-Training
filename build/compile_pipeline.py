@@ -46,10 +46,10 @@ def compile_pipeline(args):
         output_filename=pipeline_definition_file,
     )
 
-    if isinstance(args["use_gpu"], str):
-        use_gpu = bool(args["use_gpu"])
+    if isinstance(args.use_gpu, str):
+        use_gpu = bool(args.use_gpu)
     else:
-        use_gpu = args["use_gpu"]
+        use_gpu = args.use_gpu
 
     return runner.run(
         create_pipeline(
