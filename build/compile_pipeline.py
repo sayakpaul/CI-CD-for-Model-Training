@@ -1,9 +1,9 @@
-import os
-import logging
 import argparse
+from absl import logging
+from tensorflow import keras
 from create_pipeline import create_pipeline
 
-from tfx import v1 as tfx
+from tfx.orchestration import data_types
 from tfx.orchestration.kubeflow.v2 import kubeflow_v2_dag_runner
 
 
@@ -11,30 +11,12 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--pipeline-name",
-        type=str,
+        "--use-gpu",
+        type=bool,
+        required=False,
+        default=False
     )
 
-    parser.add_argument(
-        "--pipeline-root",
-        type=str,
-    )
-
-    parser.add_argument(
-        "--data-root",
-        type=str,
-    )
-
-    parser.add_argument(
-        "--module-root",
-        type=str,
-    )
-
-    parser.add_argument(
-        "--serving-model-dir",
-        type=str,
-    )
-    
     parser.add_argument(
         "--tfx-image-uri",
         type=str,
@@ -57,15 +39,10 @@ def compile_pipeline(args):
 
     return runner.run(
         create_pipeline(
-            pipeline_name=args.pipeline_name,
-            pipeline_root=args.pipeline_root,
-            data_root=args.data_root,
-            module_file=os.path.join(args.module_root + "penguin_trainer.py"),
-            serving_model_dir=args.serving_model_dir,
-            project_id=os.getenv("PROJECT"),
-            region=os.getenv("REGION"),
-            # We will use CPUs only for now.
-            use_gpu=False,
+            num_epochs=data_types.RuntimeParameter(name="num_epochs", ptype=int),
+            batch_size=data_types.RuntimeParameter(name="batch_sizer", ptype=int),
+            optimizer=data_types.RuntimeParameter(name="optimizer", ptype=keras.optimizers.Optimizer),
+            use_gpu=args["use_gpu"],
         ),
         write_out=True,
     )
@@ -73,7 +50,6 @@ def compile_pipeline(args):
 
 def main():
     args = get_args()
-    print(f"TFX Version: {tfx.__version__}")
     result = compile_pipeline(args)
     logging.info(result)
 
