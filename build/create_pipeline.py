@@ -26,7 +26,7 @@ def create_pipeline(
         batch_size=batch_size,
         learning_rate=learning_rate
     ).with_id("HyperparamsGen")
-
+    print(hyperparams_gen.outputs.hyperparameters)
     # NEW: Configuration for Vertex AI Training.
     # This dictionary will be passed as `CustomJobSpec`.
     vertex_job_spec = {
