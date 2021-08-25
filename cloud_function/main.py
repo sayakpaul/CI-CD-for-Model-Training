@@ -58,9 +58,8 @@ def trigger_pipeline(event, context):
     api_client = AIPlatformClient(project_id=project, region=region)
 
     response = api_client.create_run_from_job_spec(
-        job_spec_path=gcs_pipeline_file_location,
-        parameter_values=parameter_values,
-        enable_caching=True,
+        job_spec_path=gcs_pipeline_file_location, parameter_values=parameter_values,
+        enable_caching=True
     )
 
     logging.info(response)

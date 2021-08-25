@@ -12,6 +12,7 @@ from utils import config, custom_components
 
 def create_pipeline(
     num_epochs: data_types.RuntimeParameter,
+    batch_size: data_types.RuntimeParameter,
     learning_rate: data_types.RuntimeParameter,
     use_gpu: bool,
 ) -> tfx.dsl.Pipeline:
@@ -22,6 +23,7 @@ def create_pipeline(
     # Generate hyperparameters.
     hyperparams_gen = custom_components.hyperparameters_gen(
         num_epochs=num_epochs,
+        batch_size=batch_size,
         learning_rate=learning_rate
     ).with_id("HyperparamsGen")
 
@@ -53,8 +55,8 @@ def create_pipeline(
     trainer = tfx.extensions.google_cloud_ai_platform.Trainer(
         module_file=config.MODULE_FILE,
         examples=example_gen.outputs["examples"],
-        train_args=tfx.proto.TrainArgs(num_steps=100),
-        eval_args=tfx.proto.EvalArgs(num_steps=5),
+        train_args=tfx.proto.TrainArgs(num_steps=0),
+        eval_args=tfx.proto.EvalArgs(num_steps=None),
         hyperparameters=hyperparams_gen.outputs["hyperparameters"],
         custom_config={
             tfx.extensions.google_cloud_ai_platform.ENABLE_UCAIP_KEY: True,

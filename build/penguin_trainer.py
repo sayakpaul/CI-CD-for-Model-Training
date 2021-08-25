@@ -19,8 +19,8 @@ _FEATURE_KEYS = [
 ]
 _LABEL_KEY = "species"
 
-_TRAIN_BATCH_SIZE = 20
-_EVAL_BATCH_SIZE = 10
+# _TRAIN_BATCH_SIZE = 20
+# _EVAL_BATCH_SIZE = 10
 
 # Since we're not generating or creating a schema, we will instead create
 # a feature spec.  Since there are a fairly small number of features this is
@@ -56,8 +56,8 @@ def _input_fn(
     return data_accessor.tf_dataset_factory(
         file_pattern,
         tfxio.TensorFlowDatasetOptions(batch_size=batch_size, label_key=_LABEL_KEY),
-        schema=schema
-    ).repeat()
+        schema=schema,
+    )
 
 
 def _make_keras_model(learning_rate: float) -> tf.keras.Model:
@@ -114,10 +114,10 @@ def run_fn(fn_args: tfx.components.FnArgs):
     logging.info(hyperparameters)
 
     train_dataset = _input_fn(
-        fn_args.train_files, fn_args.data_accessor, schema, batch_size=_TRAIN_BATCH_SIZE
+        fn_args.train_files, fn_args.data_accessor, schema, batch_size=hyperparameters["batch_size"]
     )
     eval_dataset = _input_fn(
-        fn_args.eval_files, fn_args.data_accessor, schema, batch_size=_EVAL_BATCH_SIZE
+        fn_args.eval_files, fn_args.data_accessor, schema, batch_size=hyperparameters["batch_size"]
     )
 
     # NEW: If we have a distribution strategy, build a model in a strategy scope.
@@ -130,9 +130,7 @@ def run_fn(fn_args: tfx.components.FnArgs):
 
     model.fit(
         train_dataset,
-        steps_per_epoch=fn_args.train_steps,
         validation_data=eval_dataset,
-        validation_steps=fn_args.eval_steps,
         epochs=hyperparameters["num_epochs"],
     )
 

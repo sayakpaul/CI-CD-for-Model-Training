@@ -44,6 +44,7 @@ def compile_pipeline(args):
     return runner.run(
         create_pipeline(
             num_epochs=data_types.RuntimeParameter(name="num_epochs", ptype=int),
+            batch_size=data_types.RuntimeParameter(name="batch_size", ptype=int),
             learning_rate=data_types.RuntimeParameter(name="learning_rate", ptype=float),
             use_gpu=use_gpu,
         ),
