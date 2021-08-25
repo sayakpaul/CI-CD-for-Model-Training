@@ -56,11 +56,11 @@ def _input_fn(
     return data_accessor.tf_dataset_factory(
         file_pattern,
         tfxio.TensorFlowDatasetOptions(batch_size=batch_size, label_key=_LABEL_KEY),
-        schema=schema,
+        schema=schema
     ).repeat()
 
 
-def _make_keras_model() -> tf.keras.Model:
+def _make_keras_model(learning_rate: float) -> tf.keras.Model:
     """Creates a DNN Keras model for classifying penguin data.
 
     Returns:
@@ -75,9 +75,10 @@ def _make_keras_model() -> tf.keras.Model:
     outputs = keras.layers.Dense(3)(d)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
+    optimizer = keras.optimizers.Adam(learning_rate)
     model.compile(
-        optimizer=keras.optimizers.Adam(1e-2),
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        optimizer=optimizer,
+        loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         metrics=[keras.metrics.SparseCategoricalAccuracy()],
     )
 
@@ -108,6 +109,9 @@ def run_fn(fn_args: tfx.components.FnArgs):
     # `schema_from_feature_spec` could be used to generate schema from very simple
     # feature_spec, but the schema returned would be very primitive.
     schema = schema_utils.schema_from_feature_spec(_FEATURE_SPEC)
+    hyperparameters = fn_args.hyperparameters
+    logging.info("Hyperparameters:")
+    logging.info(hyperparameters)
 
     train_dataset = _input_fn(
         fn_args.train_files, fn_args.data_accessor, schema, batch_size=_TRAIN_BATCH_SIZE
@@ -119,17 +123,17 @@ def run_fn(fn_args: tfx.components.FnArgs):
     # NEW: If we have a distribution strategy, build a model in a strategy scope.
     strategy = _get_distribution_strategy(fn_args)
     if strategy is None:
-        model = _make_keras_model()
+        model = _make_keras_model(hyperparameters["learning_rate"])
     else:
         with strategy.scope():
-            model = _make_keras_model()
+            model = _make_keras_model(hyperparameters["learning_rate"])
 
     model.fit(
         train_dataset,
         steps_per_epoch=fn_args.train_steps,
         validation_data=eval_dataset,
         validation_steps=fn_args.eval_steps,
-        epochs=1,
+        epochs=hyperparameters["num_epochs"],
     )
 
     # The result of the training should be saved in `fn_args.serving_model_dir`

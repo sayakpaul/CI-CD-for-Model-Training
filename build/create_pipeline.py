@@ -1,24 +1,34 @@
+from tfx.orchestration import data_types
 from tfx import v1 as tfx
 
+import os
+import sys
+SCRIPT_DIR = os.path.dirname(
+    os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__)))
+)
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, "..")))
+
+from utils import config, custom_components
 
 def create_pipeline(
-    pipeline_name: str,
-    pipeline_root: str,
-    data_root: str,
-    module_file: str,
-    serving_model_dir: str,
-    project_id: str,
-    region: str,
+    num_epochs: data_types.RuntimeParameter,
+    learning_rate: data_types.RuntimeParameter,
     use_gpu: bool,
 ) -> tfx.dsl.Pipeline:
     """Implements the penguin pipeline with TFX."""
     # Brings data into the pipeline or otherwise joins/converts training data.
-    example_gen = tfx.components.CsvExampleGen(input_base=data_root)
+    example_gen = tfx.components.CsvExampleGen(input_base=config.DATA_ROOT)
+
+    # Generate hyperparameters.
+    hyperparams_gen = custom_components.hyperparameters_gen(
+        num_epochs=num_epochs,
+        learning_rate=learning_rate
+    ).with_id("HyperparamsGen")
 
     # NEW: Configuration for Vertex AI Training.
     # This dictionary will be passed as `CustomJobSpec`.
     vertex_job_spec = {
-        "project": project_id,
+        "project": config.GCP_PROJECT,
         "worker_pool_specs": [
             {
                 "machine_spec": {
@@ -41,13 +51,14 @@ def create_pipeline(
     # Trains a model using Vertex AI Training.
     # NEW: We need to specify a Trainer for GCP with related configs.
     trainer = tfx.extensions.google_cloud_ai_platform.Trainer(
-        module_file=module_file,
+        module_file=config.MODULE_FILE,
         examples=example_gen.outputs["examples"],
         train_args=tfx.proto.TrainArgs(num_steps=100),
         eval_args=tfx.proto.EvalArgs(num_steps=5),
+        hyperparameters=hyperparams_gen.outputs["hyperparameters"],
         custom_config={
             tfx.extensions.google_cloud_ai_platform.ENABLE_UCAIP_KEY: True,
-            tfx.extensions.google_cloud_ai_platform.UCAIP_REGION_KEY: region,
+            tfx.extensions.google_cloud_ai_platform.UCAIP_REGION_KEY: config.GCP_REGION,
             tfx.extensions.google_cloud_ai_platform.TRAINING_ARGS_KEY: vertex_job_spec,
             "use_gpu": use_gpu,
         },
@@ -58,17 +69,18 @@ def create_pipeline(
         model=trainer.outputs["model"],
         push_destination=tfx.proto.PushDestination(
             filesystem=tfx.proto.PushDestination.Filesystem(
-                base_directory=serving_model_dir
+                base_directory=config.SERVING_MODEL_DIR
             )
         ),
     )
 
     components = [
         example_gen,
+        hyperparams_gen,
         trainer,
         pusher,
     ]
 
     return tfx.dsl.Pipeline(
-        pipeline_name=pipeline_name, pipeline_root=pipeline_root, components=components
+        pipeline_name=config.PIPELINE_NAME, pipeline_root=config.PIPELINE_ROOT, components=components
     )
