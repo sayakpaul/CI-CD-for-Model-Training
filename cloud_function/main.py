@@ -23,18 +23,19 @@ from google.cloud import storage
 
 
 def trigger_pipeline(event, context):
-
+    # Parse the environment variables.
     project = os.getenv("PROJECT")
     region = os.getenv("REGION")
     gcs_pipeline_file_location = os.getenv("GCS_PIPELINE_FILE_LOCATION")
-
+    
     if not project:
         raise ValueError("Environment variable GCP_PROJECT is not set.")
     if not region:
         raise ValueError("Environment variable GCP_REGION is not set.")
     if not gcs_pipeline_file_location:
         raise ValueError("Environment variable GCS_PIPELINE_FILE_LOCATION is not set.")
-
+    
+    # Check if the pipeline file exists in the provided GCS Bucket.
     storage_client = storage.Client()
 
     if not gcs_pipeline_file_location:
@@ -49,12 +50,14 @@ def trigger_pipeline(event, context):
 
     if not blob.exists(storage_client):
         raise ValueError(f"{gcs_pipeline_file_location} does not exist.")
-
+    
+    # Parse the data from the Pub/Sub trigger message.
     data = base64.b64decode(event["data"]).decode("utf-8")
     logging.info(f"Event data: {data}")
 
     parameter_values = json.loads(data)
-
+    
+    # Initialize Vertex AI API client and submit for pipeline execution.
     api_client = AIPlatformClient(project_id=project, region=region)
 
     response = api_client.create_run_from_job_spec(
