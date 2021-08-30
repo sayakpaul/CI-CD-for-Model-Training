@@ -63,5 +63,5 @@ steps:
   id:  'Upload Pipeline to GCS'
   waitFor: ['Compile Pipeline']
 
-# Push TFX Image to Container Registy.
+# Push TFX Image to Container Registry.
 images: ['$_TFX_IMAGE_URI']
