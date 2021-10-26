@@ -6,9 +6,9 @@ resources have been used to prepare the files under the `build` directory:
 * [Vertex AI Training with TFX and Vertex Pipelines](https://www.tensorflow.org/tfx/tutorials/tfx/gcp/vertex_pipelines_vertex_training)
 * [MLOps with Vertex AI by GCP](https://github.com/GoogleCloudPlatform/mlops-with-vertex-ai)
 
-Another accompanying repository for the purpose of doing CI/CD for model training can be found here: [deep-diver/Model-Training-as-a-CI-CD-System](https://github.com/deep-diver/Model-Training-as-a-CI-CD-System). In fact this repository acts as a sister repository to [deep-diver/Model-Training-as-a-CI-CD-System](https://github.com/deep-diver/Model-Training-as-a-CI-CD-System).
+Another accompanying repository for doing CI/CD for model training can be found here: [deep-diver/Model-Training-as-a-CI-CD-System](https://github.com/deep-diver/Model-Training-as-a-CI-CD-System). 
 
-It's recommended that one goes through this repository with the accompanying blog post from Google Cloud: [TBA]
+This repository acts as a sister repository to [deep-diver/Model-Training-as-a-CI-CD-System](https://github.com/deep-diver/Model-Training-as-a-CI-CD-System). It's recommended that one goes through this repository with the accompanying blog post from Google Cloud: [Model training as a CI/CD system: Part II](https://cloud.google.com/blog/topics/developers-practitioners/model-training-cicd-system-part-ii).
 
 ## Acknowledgements
 
